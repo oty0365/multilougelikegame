@@ -14,6 +14,10 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Unity.Services.Authentication.PlayerAccounts;
 using Unity.Services.CloudSave;
+using Unity.Services.CloudSave.Internal;
+using System;
+using JetBrains.Annotations;
+using UnityEngine.SceneManagement;
 
 
 public class NetManager : MonoBehaviour
@@ -32,24 +36,34 @@ public class NetManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI role;
     [SerializeField] private GameObject multiplayerBtn;
     [SerializeField] private GameObject multiplayerLobbyPannel;
-    [SerializeField] private TextMeshProUGUI readyPlayers;
     [Header("참가 플레이어 btn")]
     [SerializeField] private Button startBtn;
-    [SerializeField] private Button readyBtn;
+    [SerializeField] private TextMeshProUGUI readyTxt;
 
-        
-    
+
+
+
     private async void Start() //비동기->동시에 일어나지 않는다
     {
-        
-        InitUI();
         await UnityServices.InitializeAsync();
+        InitUI();
         PlayerAccountService.Instance.SignedIn += SignInWithUnity;
-
-        /*if (!AuthenticationService.Instance.IsSignedIn)
+    }
+    public async void GuestLogin()
+    {
+        try
         {
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        }*/
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
+            loginPannel.SetActive(false);
+        }
+        catch(AuthenticationException e) 
+        {
+            Debug.LogError("로그인 실패:" + e);
+        }
+
     }
     async Task SignInWithUnityAsync(string accessToken)
     {
@@ -141,6 +155,9 @@ public class NetManager : MonoBehaviour
         {
             await CreateLobbyWithHeartbeatAsync();
             //curLobby = await LobbyService.Instance.CreateLobbyAsync("랜덤매칭(4)", 4);
+            UpdateLobbyOptions options = new UpdateLobbyOptions();
+            options.IsPrivate = false;
+            await LobbyService.Instance.UpdateLobbyAsync(curLobby.Id,options);
             Debug.Log("새로운 방 생성됨:" + curLobby.Id);
             ConnectToLobbyUpdate(curLobby.Id);
             await AllocateRelayServerAndJoin(curLobby);
@@ -186,8 +203,15 @@ public class NetManager : MonoBehaviour
         NetworkManager.Singleton.StartHost();
         ChangeText(curLobby.Id, "집회장");
         Debug.Log("호스팅이 시작됨");
-        InitReadyPlayers();
+        //InitReadyPlayers();
         InitUIOnJoined(true);
+    }
+    private void CheckMatchTotalPlayers()
+    {
+        if (NetworkManager.Singleton.ConnectedClients.Count== curLobby.MaxPlayers)
+        {
+            OnStartClicked();
+        }
     }
     private void StartClient()
     {
@@ -206,17 +230,28 @@ public class NetManager : MonoBehaviour
         var callbacks = new LobbyEventCallbacks();
         await LobbyService.Instance.SubscribeToLobbyEventsAsync(lobbyId, callbacks);
         callbacks.LobbyChanged += OnLobbyUpdated;
+        //callbacks.DataChanged += OnPlayerDataChanged;
     }
+
+    /*private void OnPlayerDataChanged(Dictionary<string, ChangedOrRemovedLobbyValue<DataObject>> dictionary)
+    {
+        Debug.Log("!");
+        if (dictionary.ContainsKey("IsReady") && dictionary["IsReady"].Value.ToString() == "true")
+        {
+            readyCount++;
+        }
+        var joinedCustomers = (int)curLobby.Players.Count - 1;
+        readyPlayers.text = readyCount + "/" + joinedCustomers.ToString();
+    }*/
+
     private void OnLobbyUpdated(ILobbyChanges changes)
     {
         joinedPlayers.text = curLobby.Players.Count+ "/" + curLobby.MaxPlayers;
-
+        CheckMatchTotalPlayers();
     }
     private void InitUIOnJoined(bool isHost)
     {
         joinedPlayers.text = curLobby.Players.Count + "/" + curLobby.MaxPlayers;
-        var joinedCustomers = (int)curLobby.Players.Count - 1;
-        readyPlayers.text = curLobby.Data["ReadyPlayers"].Value + "/" + joinedCustomers.ToString();
         if (isHost)
         {
             startBtn.gameObject.SetActive(true);
@@ -224,8 +259,8 @@ public class NetManager : MonoBehaviour
         }
         else
         {
-            readyBtn.gameObject.SetActive(true);
-            readyBtn.onClick.AddListener(() => OnReadyClicked());
+            readyTxt.gameObject.SetActive(true);
+            //readyBtn.onClick.AddListener(() => OnReadyClicked());
         }
     }
     async Task<Lobby> CreateLobbyWithHeartbeatAsync()
@@ -252,65 +287,80 @@ public class NetManager : MonoBehaviour
     {
         multiplayerLobbyPannel.SetActive(false);
         startBtn.gameObject.SetActive(false);
-        readyBtn.gameObject.SetActive(false);
+        readyTxt.gameObject.SetActive(false);
     }
 
-    public void OnReadyClicked()
+    /*public void OnReadyClicked()
     {
         Debug.Log("Ready");
-        AddReadyPlayers();
+        //SayReadyAsync();
         
-    }
+    }*/
     public void OnStartClicked()
     {
-        //if(NetworkManager.Singleton.ConnectedClients.Count == 0)
-        Debug.Log("Start");
+        if(NetworkManager.Singleton.ConnectedClients.Count < 2)
+        {
+            Debug.Log("인원수 이슈");
+        }
+        else
+        {
+            ChangeSceneForAllPlayers();
+        }
     }
-    private async void AddReadyPlayers()
+    private void ChangeSceneForAllPlayers()
+    {
+        if (NetworkManager.Singleton.IsHost)
+        {
+            NetworkManager.Singleton.SceneManager.LoadScene("InGame", UnityEngine.SceneManagement.LoadSceneMode.Single);
+        }
+    }
+    /*private async void SayReadyAsync()
     {
         try
         {
-            curLobby = await LobbyService.Instance.GetLobbyAsync(curLobby.Id);
-            var readyPlayersVar = int.Parse(curLobby.Data["ReadyPlayers"].Value);
-            readyPlayersVar++;
-            var readyPlayersStr = readyPlayers.ToString();
-            Dictionary<string, DataObject> updatedData = new Dictionary<string, DataObject>
+            UpdatePlayerOptions options = new UpdatePlayerOptions();
+
+            options.Data = new Dictionary<string, PlayerDataObject>()
         {
-            { "PlayerCount", new DataObject(DataObject.VisibilityOptions.Public,readyPlayersStr) }
+        {
+            "IsReday", new PlayerDataObject(
+                visibility: PlayerDataObject.VisibilityOptions.Public,
+                value: "true")
+        }
         };
 
-            curLobby = await LobbyService.Instance.UpdateLobbyAsync(curLobby.Id, new UpdateLobbyOptions
-            {
-                Data = updatedData
-            });
-            var joinedCustomers = (int)curLobby.Players.Count - 1;
-            readyPlayers.text = curLobby.Data["ReadyPlayers"].Value + "/" + joinedCustomers.ToString();
-            Debug.Log("Lobby updated!");
+            string playerId = AuthenticationService.Instance.PlayerId;
+
+            var lobby = await LobbyService.Instance.UpdatePlayerAsync(curLobby.Id, playerId, options);
         }
         catch (LobbyServiceException e)
         {
-            Debug.LogError($"Failed to update lobby: {e.Message}");
+            Debug.Log(e);
         }
-    }
-    private async void InitReadyPlayers()
+    }*/
+    /*private async void InitReadyPlayers()
     {
         try
         {
-            Dictionary<string, DataObject> updatedData = new Dictionary<string, DataObject>
+            UpdatePlayerOptions options = new UpdatePlayerOptions();
+
+            options.Data = new Dictionary<string, PlayerDataObject>()
         {
-            { "ReadyPlayers", new DataObject(DataObject.VisibilityOptions.Public, "0") }
+        {
+            "IsReday", new PlayerDataObject(
+                visibility: PlayerDataObject.VisibilityOptions.Public,
+                value: "false")
+        }
         };
 
-            curLobby = await LobbyService.Instance.UpdateLobbyAsync(curLobby.Id, new UpdateLobbyOptions
-            {
-                Data = updatedData
-            });
+            string playerId = AuthenticationService.Instance.PlayerId;
 
-            Debug.Log("Lobby updated!");
+            var lobby = await LobbyService.Instance.UpdatePlayerAsync(curLobby.Id, playerId, options);
         }
         catch (LobbyServiceException e)
         {
-            Debug.LogError($"Failed to update lobby: {e.Message}");
+            Debug.Log(e);
         }
-    }
+    }*/
+    
 }

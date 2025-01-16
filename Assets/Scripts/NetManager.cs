@@ -22,12 +22,14 @@ using WebSocketSharp.Net;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
+using Unity.Services.Apis.Relay;
 
 
 public class NetManager : MonoBehaviour
 {
     //Loby->플레이어가 원하는 게임을 찾거나, 새겜 만들기
     //Relay->매칭된 플레이어들의 Relay의 JoinCode로 연결되어 멀티 환경 유지
+    private bool isHeartbeatActive;
     private Lobby curLobby;
     public int readyCount;
     public PlayerInfo playerInfo;
@@ -56,9 +58,9 @@ public class NetManager : MonoBehaviour
     private async void Start() //비동기->동시에 일어나지 않는다
     {
         await UnityServices.InitializeAsync();
-        //AuthenticationService.Instance.ClearSessionToken();
+        AuthenticationService.Instance.ClearSessionToken();
         InitUI();
-        //PlayerAccountService.Instance.SignedIn -= SignInWithUnity;
+        PlayerAccountService.Instance.SignedIn -= SignInWithUnity;
         PlayerAccountService.Instance.SignedIn += SignInWithUnity;
         joinButton.onClick.AddListener(() => JoinGameWithCode(joinCodeField.text));
     }
@@ -191,8 +193,10 @@ public class NetManager : MonoBehaviour
             Debug.Log("유효하지 않은 JoinCode");
             return;
         }
+        Debug.Log(inputJoinCode);
         try
         {
+            if (!NetworkManager.Singleton.IsHost) { 
             var joinAlloctaion = await RelayService.Instance.JoinAllocationAsync(inputJoinCode);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
                 joinAlloctaion.RelayServer.IpV4,
@@ -204,6 +208,7 @@ public class NetManager : MonoBehaviour
                 );
             multiplayerLobbyPannel.SetActive(true);
             StartClient();
+            }
         
         }
         catch(RelayServiceException e)
@@ -229,7 +234,8 @@ public class NetManager : MonoBehaviour
     {
         try
         {
-            var allocation = await RelayService.Instance.CreateAllocationAsync(lobby.MaxPlayers);
+
+            var allocation = await RelayService.Instance.CreateAllocationAsync(4);
             var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             joinCodeId.text = "방 코드: "+joinCode.ToString();
             //LobbyCodeUpdate(joinCode);
@@ -261,7 +267,7 @@ public class NetManager : MonoBehaviour
     {
 
         NetworkManager.Singleton.StartClient();
-        ChangeText(curLobby.Id, "참가자");
+        role.text = "참가자";
         Debug.Log("클라이이언트가 연결되었습니다.");
         InitUIOnJoined(false);
     }
@@ -296,7 +302,8 @@ public class NetManager : MonoBehaviour
     }
     private void InitUIOnJoined(bool isHost)
     {
-        joinedPlayers.text = NetworkManager.Singleton.ConnectedClients.Count + "/" + curLobby.MaxPlayers;
+        Debug.Log(NetworkManager.Singleton.ConnectedClientsList.Count);
+        //joinedPlayers.text = NetworkManager.Singleton.ConnectedClients.Count + "/" + curLobby.MaxPlayers;
         if (isHost)
         {
             startBtn.gameObject.SetActive(true);
@@ -314,7 +321,7 @@ public class NetManager : MonoBehaviour
         {
             Data = new Dictionary<string, DataObject>
                     {
-                        { "lobbyCode", new DataObject(DataObject.VisibilityOptions.Public, "") },
+                        //{ "lobbyCode", new DataObject(DataObject.VisibilityOptions.Public, "") },
                         { "IsReady", new DataObject(DataObject.VisibilityOptions.Public, "false") }
                     }
         };

@@ -193,7 +193,7 @@ public class NetManager : MonoBehaviour
         }
         try
         {
-            var joinAlloctaion = await RelayService.Instance.JoinAllocationAsync(curLobby.Data["lobbyCode"].Value.ToString());
+            var joinAlloctaion = await RelayService.Instance.JoinAllocationAsync(inputJoinCode);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
                 joinAlloctaion.RelayServer.IpV4,
                 (ushort)joinAlloctaion.RelayServer.Port,

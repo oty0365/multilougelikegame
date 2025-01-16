@@ -283,12 +283,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   readyCount: 0
   loginPannel: {fileID: 353607533}
+  lobbyPannel: {fileID: 962660209}
   roomId: {fileID: 1705246252}
   joinedPlayers: {fileID: 237145837}
   role: {fileID: 2095688821}
   multiplayerBtn: {fileID: 1410032006}
   multiplayerLobbyPannel: {fileID: 288784807}
-  readyPlayers: {fileID: 0}
   startBtn: {fileID: 1094632775}
   readyTxt: {fileID: 719294103}
 --- !u!4 &29508983
@@ -1834,7 +1834,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1326524660}
-    PlayerPrefab: {fileID: 0}
+    PlayerPrefab: {fileID: 2083869507754186786, guid: 04566ee05243aeb469cd20cdf0a8c228, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 36ff04089ca5cac49bf74609205ea8e5, type: 2}

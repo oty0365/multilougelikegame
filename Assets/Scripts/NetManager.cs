@@ -19,6 +19,7 @@ using System;
 using JetBrains.Annotations;
 using UnityEngine.SceneManagement;
 using WebSocketSharp.Net;
+using Unity.Netcode.Transports.UTP;
 
 
 public class NetManager : MonoBehaviour
@@ -50,9 +51,9 @@ public class NetManager : MonoBehaviour
     private async void Start() //비동기->동시에 일어나지 않는다
     {
         await UnityServices.InitializeAsync();
-        AuthenticationService.Instance.ClearSessionToken();
+        //AuthenticationService.Instance.ClearSessionToken();
         InitUI();
-        PlayerAccountService.Instance.SignedIn -= SignInWithUnity;
+        //PlayerAccountService.Instance.SignedIn -= SignInWithUnity;
         PlayerAccountService.Instance.SignedIn += SignInWithUnity;
     }
     public async void GuestLogin()
@@ -184,6 +185,15 @@ public class NetManager : MonoBehaviour
             curLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
             ConnectToLobbyUpdate(curLobby.Id);
             Debug.Log("접속 완료" + curLobby.Id);
+            var joinAlloctaion  = await RelayService.Instance.JoinAllocationAsync(curLobby.Data["lobbyCode"].Value.ToString());
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
+                joinAlloctaion.RelayServer.IpV4,
+                (ushort)joinAlloctaion.RelayServer.Port,
+                joinAlloctaion.AllocationIdBytes,
+                joinAlloctaion.Key,
+                joinAlloctaion.ConnectionData,
+                joinAlloctaion.HostConnectionData
+                );
             multiplayerLobbyPannel.SetActive(true);
             StartClient();
         }
@@ -198,6 +208,7 @@ public class NetManager : MonoBehaviour
         {
             var allocation = await RelayService.Instance.CreateAllocationAsync(lobby.MaxPlayers);
             var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            LobbyCodeUpdate(joinCode);
             Debug.Log("Relay서버 할당 완료. JoinCode: " + joinCode);
         }
         catch(RelayServiceException e)
@@ -224,6 +235,7 @@ public class NetManager : MonoBehaviour
     }
     private void StartClient()
     {
+
         NetworkManager.Singleton.StartClient();
         ChangeText(curLobby.Id, "참가자");
         Debug.Log("클라이이언트가 연결되었습니다.");
@@ -279,6 +291,7 @@ public class NetManager : MonoBehaviour
         {
             Data = new Dictionary<string, DataObject>
                     {
+                        { "lobbyCode", new DataObject(DataObject.VisibilityOptions.Public, "") },
                         { "IsReady", new DataObject(DataObject.VisibilityOptions.Public, "false") }
                     }
         };
@@ -376,6 +389,33 @@ public class NetManager : MonoBehaviour
             });
 
             Debug.Log("로비 데이터가 성공적으로 업데이트되었습니다.");
+
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogError($"로비 데이터 업데이트 실패: {e.Message}");
+        }
+    }
+    public async void LobbyCodeUpdate(string joinCode)
+    {
+        try
+        {
+            curLobby = await LobbyService.Instance.GetLobbyAsync(curLobby.Id);
+
+            string code = joinCode;
+
+            var updatedData = new Dictionary<string, DataObject>
+            {
+                { "lobbyCode", new DataObject(DataObject.VisibilityOptions.Public, code )}
+            };
+
+            curLobby = await LobbyService.Instance.UpdateLobbyAsync(curLobby.Id, new UpdateLobbyOptions
+            {
+                Data = updatedData
+            });
+
+            Debug.Log("로비 데이터가 성공적으로 업데이트되었습니다.");
+            Debug.Log(curLobby.Data["lobbyCode"].Value.ToString());
         }
         catch (LobbyServiceException e)
         {

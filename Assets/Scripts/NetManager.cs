@@ -20,6 +20,8 @@ using JetBrains.Annotations;
 using UnityEngine.SceneManagement;
 using WebSocketSharp.Net;
 using Unity.Netcode.Transports.UTP;
+using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 
 public class NetManager : MonoBehaviour
@@ -36,14 +38,17 @@ public class NetManager : MonoBehaviour
     [Header("로비 패널")]
     [SerializeField] private GameObject lobbyPannel;
     [Header("방상태 관련 tmp")]
-    [SerializeField] private TextMeshProUGUI roomId;
+    [SerializeField] private TextMeshProUGUI joinCodeId;
     [SerializeField] private TextMeshProUGUI joinedPlayers;
     [SerializeField] private TextMeshProUGUI role;
     [SerializeField] private GameObject multiplayerBtn;
     [SerializeField] private GameObject multiplayerLobbyPannel;
     [Header("참가 플레이어 btn")]
-    [SerializeField] private Button startBtn;
+    [SerializeField] private UnityEngine.UI.Button startBtn;
     [SerializeField] private TextMeshProUGUI readyTxt;
+
+    [SerializeField] private TMP_InputField joinCodeField;
+    [SerializeField] private UnityEngine.UI.Button joinButton;
 
 
 
@@ -55,6 +60,7 @@ public class NetManager : MonoBehaviour
         InitUI();
         //PlayerAccountService.Instance.SignedIn -= SignInWithUnity;
         PlayerAccountService.Instance.SignedIn += SignInWithUnity;
+        joinButton.onClick.AddListener(() => JoinGameWithCode(joinCodeField.text));
     }
     public async void GuestLogin()
     {
@@ -178,14 +184,16 @@ public class NetManager : MonoBehaviour
             Debug.LogError("로비 생성 실패" + e);
         }
     }
-    private async Task JoinLobby(string lobbyId)
+    public async void JoinGameWithCode(string inputJoinCode) 
     {
+        if (string.IsNullOrEmpty(inputJoinCode))
+        {
+            Debug.Log("유효하지 않은 JoinCode");
+            return;
+        }
         try
         {
-            curLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
-            ConnectToLobbyUpdate(curLobby.Id);
-            Debug.Log("접속 완료" + curLobby.Id);
-            var joinAlloctaion  = await RelayService.Instance.JoinAllocationAsync(curLobby.Data["lobbyCode"].Value.ToString());
+            var joinAlloctaion = await RelayService.Instance.JoinAllocationAsync(curLobby.Data["lobbyCode"].Value.ToString());
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
                 joinAlloctaion.RelayServer.IpV4,
                 (ushort)joinAlloctaion.RelayServer.Port,
@@ -195,6 +203,21 @@ public class NetManager : MonoBehaviour
                 joinAlloctaion.HostConnectionData
                 );
             multiplayerLobbyPannel.SetActive(true);
+            StartClient();
+        
+        }
+        catch(RelayServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+    private async Task JoinLobby(string lobbyId)
+    {
+        try
+        {
+            curLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+            ConnectToLobbyUpdate(curLobby.Id);
+            Debug.Log("접속 완료" + curLobby.Id);
             StartClient();
         }
         catch (LobbyServiceException e) 
@@ -208,7 +231,8 @@ public class NetManager : MonoBehaviour
         {
             var allocation = await RelayService.Instance.CreateAllocationAsync(lobby.MaxPlayers);
             var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-            LobbyCodeUpdate(joinCode);
+            joinCodeId.text = "방 코드: "+joinCode.ToString();
+            //LobbyCodeUpdate(joinCode);
             Debug.Log("Relay서버 할당 완료. JoinCode: " + joinCode);
         }
         catch(RelayServiceException e)
@@ -243,7 +267,6 @@ public class NetManager : MonoBehaviour
     }
     private void ChangeText(string id,string type)
     {
-        roomId.text = "방 아이디: "+id;
         role.text = type;
     }
     private async void ConnectToLobbyUpdate(string lobbyId)
@@ -268,12 +291,12 @@ public class NetManager : MonoBehaviour
 
     private void OnLobbyUpdated(ILobbyChanges changes)
     {
-        joinedPlayers.text = curLobby.Players.Count+ "/" + curLobby.MaxPlayers;
+        joinedPlayers.text = NetworkManager.Singleton.ConnectedClients.Count+ "/" + curLobby.MaxPlayers;
         CheckMatchTotalPlayers();
     }
     private void InitUIOnJoined(bool isHost)
     {
-        joinedPlayers.text = curLobby.Players.Count + "/" + curLobby.MaxPlayers;
+        joinedPlayers.text = NetworkManager.Singleton.ConnectedClients.Count + "/" + curLobby.MaxPlayers;
         if (isHost)
         {
             startBtn.gameObject.SetActive(true);
@@ -396,7 +419,7 @@ public class NetManager : MonoBehaviour
             Debug.LogError($"로비 데이터 업데이트 실패: {e.Message}");
         }
     }
-    public async void LobbyCodeUpdate(string joinCode)
+    /*public async void LobbyCodeUpdate(string joinCode)
     {
         try
         {
@@ -421,7 +444,7 @@ public class NetManager : MonoBehaviour
         {
             Debug.LogError($"로비 데이터 업데이트 실패: {e.Message}");
         }
-    }
+    }*/
     /*private async void InitReadyPlayers()
     {
         try

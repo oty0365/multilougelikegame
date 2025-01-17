@@ -23,6 +23,8 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine.UIElements;
 using Unity.VisualScripting;
 using Unity.Services.Apis.Relay;
+using Unity.Networking.Transport.Relay;
+using Unity.Multiplayer.Widgets;
 
 
 public class NetManager : MonoBehaviour
@@ -236,7 +238,11 @@ public class NetManager : MonoBehaviour
         {
 
             var allocation = await RelayService.Instance.CreateAllocationAsync(4);
+            
             var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            var relayServerData = AllocationUtils.ToRelayServerData(allocation, "dtls");
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+
             joinCodeId.text = "방 코드: "+joinCode.ToString();
             //LobbyCodeUpdate(joinCode);
             Debug.Log("Relay서버 할당 완료. JoinCode: " + joinCode);

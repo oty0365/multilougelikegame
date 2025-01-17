@@ -194,7 +194,6 @@ public class NetManager : MonoBehaviour
             options.IsPrivate = false;
             await LobbyService.Instance.UpdateLobbyAsync(curLobby.Id,options);
             Debug.Log("새로운 방 생성됨:" + curLobby.Id);
-            ConnectToLobbyUpdate(curLobby.Id);
             await AllocateRelayServerAndJoin(curLobby);
             multiplayerLobbyPannel.SetActive(true);
             StartHost();
@@ -273,6 +272,7 @@ public class NetManager : MonoBehaviour
     }
     private void StartHost()
     {
+        ConnectToLobbyUpdate(curLobby.Id);
         NetworkManager.Singleton.StartHost();
         ChangeText(curLobby.Id, "집회장");
         Debug.Log("호스팅이 시작됨");

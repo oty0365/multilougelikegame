@@ -216,7 +216,6 @@ public class NetManager : MonoBehaviour
         Debug.Log(inputJoinCode);
         try
         {
-            if (!NetworkManager.Singleton.IsHost) { 
             var joinAlloctaion = await RelayService.Instance.JoinAllocationAsync(inputJoinCode);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
                 joinAlloctaion.RelayServer.IpV4,
@@ -228,7 +227,6 @@ public class NetManager : MonoBehaviour
                 );
             multiplayerLobbyPannel.SetActive(true);
             StartClient();
-            }
         
         }
         catch(RelayServiceException e)

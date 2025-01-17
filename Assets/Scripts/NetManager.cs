@@ -261,7 +261,7 @@ public class NetManager : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
             joinCodeId.text = "방 코드: "+joinCode.ToString();
-            //RelayCodeUpdate(joinCode);
+            RelayCodeUpdate(joinCode);
             Debug.Log("Relay서버 할당 완료. JoinCode: " + joinCode);
         }
         catch(RelayServiceException e)
@@ -389,16 +389,17 @@ public class NetManager : MonoBehaviour
         }
         else
         {
-            ChangeSceneForAllPlayers();
+            Ready();
+            Ready();
         }
     }
-   private void ChangeSceneForAllPlayers()
+    /*private void ChangeSceneForAllPlayers()
     {
         if (NetworkManager.Singleton.IsServer)
         {
             NetworkManager.Singleton.SceneManager.LoadScene("InGame", LoadSceneMode.Single);
         }
-    }
+    }*/
     /*private async void SayReadyAsync()
     {
         try
@@ -423,7 +424,7 @@ public class NetManager : MonoBehaviour
             Debug.Log(e);
         }
     }*/
-    /*public async void Ready()
+    public async void Ready()
     {
         try
         {
@@ -450,8 +451,8 @@ public class NetManager : MonoBehaviour
         {
             Debug.LogError($"로비 데이터 업데이트 실패: {e.Message}");
         }
-    }*/
-    /*public async void RelayCodeUpdate(string joinCode)
+    }
+    public async void RelayCodeUpdate(string joinCode)
     {
         try
         {
@@ -476,7 +477,7 @@ public class NetManager : MonoBehaviour
         {
             Debug.LogError($"로비 데이터 업데이트 실패: {e.Message}");
         }
-    }*/
+    }
     /*private async void InitReadyPlayers()
     {
         try

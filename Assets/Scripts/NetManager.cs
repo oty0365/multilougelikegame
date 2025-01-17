@@ -323,7 +323,8 @@ public class NetManager : MonoBehaviour
     {
         Debug.Log("!");
         joinedPlayers.text = curLobby.Players.Count+ "/" + curLobby.MaxPlayers;
-        CheckMatchTotalPlayers();
+        Ready();
+        //CheckMatchTotalPlayers();
     }
     private void InitUIOnJoined(bool isHost)
     {

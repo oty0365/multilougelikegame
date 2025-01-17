@@ -389,17 +389,18 @@ public class NetManager : MonoBehaviour
         }
         else
         {
-            Ready();
-            Ready();
+            //Ready();
+            //Ready();
+            ChangeSceneForAllPlayers();
         }
     }
-    /*private void ChangeSceneForAllPlayers()
+    private void ChangeSceneForAllPlayers()
     {
         if (NetworkManager.Singleton.IsServer)
         {
             NetworkManager.Singleton.SceneManager.LoadScene("InGame", LoadSceneMode.Single);
         }
-    }*/
+    }
     /*private async void SayReadyAsync()
     {
         try

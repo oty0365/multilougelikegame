@@ -50,6 +50,9 @@ public class NetManager : MonoBehaviour
     [Header("참가 플레이어 btn")]
     [SerializeField] private UnityEngine.UI.Button startBtn;
     [SerializeField] private TextMeshProUGUI readyTxt;
+    [Header("이름설정패널")]
+    [SerializeField] private GameObject nicknamePannel;
+    [SerializeField] private TMP_InputField playerNickname;
 
 
 
@@ -71,13 +74,44 @@ public class NetManager : MonoBehaviour
             {
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
             }
+            await CheckPlayerIsNewBeAsync();
             loginPannel.SetActive(false);
+
         }
         catch(AuthenticationException e) 
         {
             Debug.LogError("로그인 실패:" + e);
         }
 
+    }
+    public async Task CheckPlayerIsNewBeAsync()
+    {
+        Dictionary<string, Unity.Services.CloudSave.Models.Item> serverData = await DataManager.instance.LoadAllPlayerData();
+        Debug.Log(serverData);
+        if (!serverData.ContainsKey("NickName"))
+        {
+            nicknamePannel.SetActive(true);
+        }
+    }
+    public async Task SetPlayerNicknameAsync()
+    {
+        await DataManager.instance.SaveData("NickName", playerNickname.text);
+    }
+    public async void SetPlayerNickname()
+    {
+        if (playerNickname.text.Length < 2 || playerNickname.text[0].Equals(" "))
+        {
+            Debug.Log(playerNickname.text.Length);
+            Debug.Log(playerNickname.text[0].Equals(" "));
+            Debug.Log("올바르지못한 형식");
+            return;
+        }
+        else
+        {
+           await SetPlayerNicknameAsync();
+            Debug.Log("이름변경완료");
+            nicknamePannel.SetActive(false);
+        }
     }
     async Task SignInWithUnityAsync(string accessToken)
     {
@@ -86,6 +120,7 @@ public class NetManager : MonoBehaviour
             await AuthenticationService.Instance.SignInWithUnityAsync(accessToken);
             Debug.Log("SignIn is successful.");
             playerInfo = AuthenticationService.Instance.PlayerInfo;
+            await CheckPlayerIsNewBeAsync();
             loginPannel.SetActive(false);
             //SavePlayerData("IsFirstConnected","")
         }
@@ -106,6 +141,7 @@ public class NetManager : MonoBehaviour
             var accessToken = PlayerAccountService.Instance.AccessToken;
             Debug.Log(accessToken);
             await SignInWithUnityAsync(accessToken);
+
 
         }
         catch

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4610ced5a30d8a8488349dba1fa07796, type: 3}
+  m_Name: ScyberSamurai
+  m_EditorClassIdentifier: 
+  playerCode: ScyberSamurai
+  playerName: "\uBBF8\uC2A4 - \uB124\uC628 "
+  icon: {fileID: -558793721997983829, guid: a75bd580dcc97724ba35ba6df868f8d9, type: 3}
+  moveSets:
+  - {fileID: 7400000, guid: b70b4a7ebb13e1b448c623a5fd2ab09c, type: 2}
+  info: "\uADF9\uB3C4\uC758 \uC790\uBCF8\uC8FC\uC758\uB85C \uBC88\uC131\uD55C \uBBF8\uB798\uC0AC\uD68C\uC758\n\uC5EC\uC131
+    \uC0AC\uBB34\uB77C\uC774 \uBD80\uD328\uC640 \uBC94\uC8C4\uAC00 \uAC00\uB4DD\uD55C
+    \uAC00\uC7A5 \uAE4A\uC740\uACF3\uC5D0\uC11C\n\uC2DC\uBBFC\uB4E4\uC744\uC704\uD55C
+    \uAC80\uC774\uB418\uC5C8\uB2E4."

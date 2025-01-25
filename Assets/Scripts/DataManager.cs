@@ -7,10 +7,17 @@ using UnityEngine;
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
+    public PlayableSets playableSets;
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
+        DontDestroyOnLoad(gameObject);
     }
     public async Task<Dictionary<string, Unity.Services.CloudSave.Models.Item>> LoadAllPlayerData()
     {

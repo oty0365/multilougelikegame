@@ -53,6 +53,8 @@ public class NetManager : MonoBehaviour
     [Header("이름설정패널")]
     [SerializeField] private GameObject nicknamePannel;
     [SerializeField] private TMP_InputField playerNickname;
+    [Header("메인로비 패널")]
+    [SerializeField] private GameObject mainPannel;
 
 
 
@@ -92,6 +94,10 @@ public class NetManager : MonoBehaviour
         {
             nicknamePannel.SetActive(true);
         }
+        else
+        {
+            mainPannel.SetActive(true);
+        }
     }
     public async Task SetPlayerNicknameAsync()
     {
@@ -111,6 +117,7 @@ public class NetManager : MonoBehaviour
            await SetPlayerNicknameAsync();
             Debug.Log("이름변경완료");
             nicknamePannel.SetActive(false);
+            mainPannel.SetActive(true);
         }
     }
     async Task SignInWithUnityAsync(string accessToken)

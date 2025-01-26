@@ -12,11 +12,13 @@ using Unity.Services.CloudSave.Models;
 using Unity.Services.Core;
 using NUnit.Framework;
 using UnityEditor.Animations;
+using TMPro;
 
 public class PlayerIdol : MonoBehaviour
 {
     public List<string> playalbes;
     public Animator playerIdolAni;
+    [SerializeField] private TextMeshProUGUI userName;
 
     async void Start()
     {
@@ -42,6 +44,7 @@ public class PlayerIdol : MonoBehaviour
                 {
                     Debug.Log(i.moveSets[0]);
                     SwitchToSpecialIdle(i.moveSets[0]);
+                    userName.text = serverData["NickName"].Value.GetAsString();
                 }
             }
         }

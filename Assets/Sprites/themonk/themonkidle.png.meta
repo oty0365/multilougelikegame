@@ -118,7 +118,7 @@ TextureImporter:
       name: themonkidle_0
       rect:
         serializedVersion: 2
-        x: 99
+        x: 100
         y: 679
         width: 122
         height: 212
@@ -140,8 +140,8 @@ TextureImporter:
       name: themonkidle_1
       rect:
         serializedVersion: 2
-        x: 419
-        y: 679
+        x: 420
+        y: 680
         width: 122
         height: 212
       alignment: 0
@@ -184,7 +184,7 @@ TextureImporter:
       name: themonkidle_3
       rect:
         serializedVersion: 2
-        x: 419
+        x: 420
         y: 362
         width: 122
         height: 212
@@ -206,7 +206,7 @@ TextureImporter:
       name: themonkidle_4
       rect:
         serializedVersion: 2
-        x: 98
+        x: 100
         y: 38
         width: 122
         height: 212
@@ -228,7 +228,7 @@ TextureImporter:
       name: themonkidle_5
       rect:
         serializedVersion: 2
-        x: 418
+        x: 420
         y: 38
         width: 122
         height: 212

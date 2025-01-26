@@ -102,6 +102,8 @@ public class NetManager : MonoBehaviour
     public async Task SetPlayerNicknameAsync()
     {
         await DataManager.instance.SaveData("NickName", playerNickname.text);
+        await DataManager.instance.SaveData("Money", "1000");
+        await DataManager.instance.SaveData("Jem", "0");
     }
     public async void SetPlayerNickname()
     {

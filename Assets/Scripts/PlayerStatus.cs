@@ -22,6 +22,7 @@ public class PlayerStatus : NetworkBehaviour
         }
         else
         {
+            UnityEngine.Debug.Log(_playableType.Value);
            foreach(var i in DataManager.instance.playableSets.playables)
             {
                 if (i.index == _playableType.Value)

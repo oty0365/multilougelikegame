@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4610ced5a30d8a8488349dba1fa07796, type: 3}
   m_Name: ScyberSamurai
   m_EditorClassIdentifier: 
+  index: 1
   playerCode: ScyberSamurai
   playerName: "\uBBF8\uC2A4 - \uB124\uC628 "
   icon: {fileID: -558793721997983829, guid: a75bd580dcc97724ba35ba6df868f8d9, type: 3}

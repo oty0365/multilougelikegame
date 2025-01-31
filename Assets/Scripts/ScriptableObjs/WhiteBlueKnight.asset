@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4610ced5a30d8a8488349dba1fa07796, type: 3}
   m_Name: WhiteBlueKnight
   m_EditorClassIdentifier: 
+  index: 2
   playerCode: WhiteBlueKnight
   playerName: "\uD770 \uAC11\uC8FC\uC758 \uAE30\uC0AC"
   icon: {fileID: 2790203119010287701, guid: 9bdc0f4cd3235ec468b2181a820d0533, type: 3}

@@ -16,15 +16,19 @@ using TMPro;
 
 public class PlayerIdol : MonoBehaviour
 {
+    public static PlayerIdol instance;
     public List<string> playalbes;
     public Animator playerIdolAni;
     [SerializeField] private TextMeshProUGUI userName;
 
+    private void Awake()
+    {
+        instance = this;
+    }
     async void Start()
     {
         await CheckPlayerCharacters();
         playalbes = new List<string>();
-        
     }
     public async Task CheckPlayerCharacters()
     {
@@ -56,6 +60,20 @@ public class PlayerIdol : MonoBehaviour
         playalbes.Add("WhiteBlueKnight");
         await DataManager.instance.SaveData("CurrentPlayableCharacter", playalbes[UnityEngine.Random.Range(0,playalbes.Count)]);
         await DataManager.instance.SaveData("Playables", playalbes);
+    }
+    public async void ChangePlayableCharacters(string playerCode)
+    {
+        await DataManager.instance.SaveData("CurrentPlayableCharacter", playerCode);
+        await DataManager.instance.LoadAllPlayerData();
+        foreach (var i in DataManager.instance.playableSets.playables)
+        {
+            if (i.playerCode == DataManager.instance.ServerData["CurrentPlayableCharacter"].Value.GetAsString())
+            {
+                Debug.Log(i.moveSets[0]);
+                SwitchToSpecialIdle(i.moveSets[0]);
+            }
+        }
+
     }
     public void SwitchToSpecialIdle(AnimationClip newClip)
     {

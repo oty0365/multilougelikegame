@@ -8,6 +8,7 @@ public class MainLobby : MonoBehaviour
     [SerializeField] private GameObject playerIdol;
     [SerializeField] private TextMeshProUGUI jem;
     [SerializeField] private TextMeshProUGUI money;
+    [SerializeField] private GameObject multiPlayPannelRandom;
     void Start()
     {
         playerIdol.SetActive(true);
@@ -19,5 +20,10 @@ public class MainLobby : MonoBehaviour
         jem.text="태양의 정수: " + serverData["Jem"].Value.GetAsString();
         money.text = "밤조각 샤드: " + serverData["Money"].Value.GetAsString();
 
+    }
+    public void multiPlayRandom()
+    {
+        multiPlayPannelRandom.SetActive(true);
+        gameObject.SetActive(false);
     }
 }

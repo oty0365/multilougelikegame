@@ -8,6 +8,7 @@ public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
     public PlayableSets playableSets;
+    public Dictionary<string, Unity.Services.CloudSave.Models.Item> ServerData;
 
     private void Awake()
     {
@@ -22,6 +23,7 @@ public class DataManager : MonoBehaviour
     public async Task<Dictionary<string, Unity.Services.CloudSave.Models.Item>> LoadAllPlayerData()
     {
         Dictionary<string, Unity.Services.CloudSave.Models.Item> serverData = await CloudSaveService.Instance.Data.Player.LoadAllAsync();
+        ServerData = serverData;
         return serverData;
     }
     public async Task SaveData(string dataKey,object dataVlaue)

@@ -20,10 +20,15 @@ public class PlayerStatus : NetworkBehaviour
                 }
             }
         }
-        else
+    }
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (!IsOwner)
         {
             UnityEngine.Debug.Log(_playableType.Value);
-           foreach(var i in DataManager.instance.playableSets.playables)
+            foreach (var i in DataManager.instance.playableSets.playables)
             {
                 if (i.index == _playableType.Value)
                 {
@@ -31,8 +36,9 @@ public class PlayerStatus : NetworkBehaviour
                 }
             }
         }
-    }
 
+        //_playableType.OnValueChanged += HandlePlayableTypeChanged;
+    }
     public void SwitchToSpecialIdle(AnimationClip newClip)
     {
 

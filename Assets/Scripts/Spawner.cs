@@ -18,6 +18,7 @@ public class MultiplayerSpawner : NetworkBehaviour
                 var playerObject = Instantiate(playerPrefab);
                 playerObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
             }
+            
         }
     }
 

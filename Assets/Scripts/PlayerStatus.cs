@@ -37,7 +37,17 @@ public class PlayerStatus : NetworkBehaviour
             }
         }
 
-        //_playableType.OnValueChanged += HandlePlayableTypeChanged;
+        _playableType.OnValueChanged += HandlePlayableTypeChanged;
+    }
+    private void HandlePlayableTypeChanged(int previousValue, int newValue)
+    {
+        foreach (var i in DataManager.instance.playableSets.playables)
+        {
+            if (i.index == newValue)
+            {
+                SwitchToSpecialIdle(i.moveSets[0]);
+            }
+        }
     }
     public void SwitchToSpecialIdle(AnimationClip newClip)
     {

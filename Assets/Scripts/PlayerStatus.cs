@@ -28,16 +28,9 @@ public class PlayerStatus : NetworkBehaviour
         if (!IsOwner)
         {
             UnityEngine.Debug.Log(_playableType.Value);
-            foreach (var i in DataManager.instance.playableSets.playables)
-            {
-                if (i.index == _playableType.Value)
-                {
-                    SwitchToSpecialIdle(i.moveSets[0]);
-                }
-            }
-        }
 
-        _playableType.OnValueChanged += HandlePlayableTypeChanged;
+            _playableType.OnValueChanged += HandlePlayableTypeChanged;
+        }
     }
     private void HandlePlayableTypeChanged(int previousValue, int newValue)
     {

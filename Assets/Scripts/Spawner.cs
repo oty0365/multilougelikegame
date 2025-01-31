@@ -13,6 +13,7 @@ public class MultiplayerSpawner : NetworkBehaviour
     {
         if (IsServer)
         {
+            Debug.Log("Spawning");
             foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
                 var playerObject = Instantiate(playerPrefab);

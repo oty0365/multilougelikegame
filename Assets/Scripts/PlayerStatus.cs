@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerStatus : NetworkBehaviour
 {
     [SerializeField] private Animator ani;
-    private NetworkVariable<int> _playableType = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<int> _playableType = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     async void Start()
     {
         if (IsOwner)

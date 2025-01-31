@@ -16,7 +16,7 @@ public class PlayerStatus : NetworkBehaviour
                 if (i.playerCode == DataManager.instance.ServerData["CurrentPlayableCharacter"].Value.GetAsString())
                 {
                     SwitchToSpecialIdle(i.moveSets[0]);
-                    _playableType = new NetworkVariable<int>(i.index, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+                    _playableType.Value = i.index;
                 }
             }
         }

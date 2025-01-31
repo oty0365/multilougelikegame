@@ -5,7 +5,7 @@ public class MultiplayerSpawner : NetworkBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
 
-    private void Awake()
+    private void Start()
     {
         SpawnPlayer();
     }

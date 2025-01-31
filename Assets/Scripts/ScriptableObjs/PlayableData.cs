@@ -4,6 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class PlayableData : ScriptableObject
 {
+    public int index;
     public string playerCode;
     public string playerName;
     public Sprite icon;

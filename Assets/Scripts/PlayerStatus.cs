@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerStatus : NetworkBehaviour
 {
     [SerializeField] private Animator ani;
-    private NetworkVariable<string> _playableType = new NetworkVariable<string>("", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<int> _playableType = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     async void Start()
     {
         if (IsOwner)
@@ -16,7 +16,7 @@ public class PlayerStatus : NetworkBehaviour
                 if (i.playerCode == DataManager.instance.ServerData["CurrentPlayableCharacter"].Value.GetAsString())
                 {
                     SwitchToSpecialIdle(i.moveSets[0]);
-                    _playableType = new NetworkVariable<string>(i.playerCode, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+                    _playableType = new NetworkVariable<int>(i.index, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
                 }
             }
         }
@@ -24,7 +24,7 @@ public class PlayerStatus : NetworkBehaviour
         {
            foreach(var i in DataManager.instance.playableSets.playables)
             {
-                if (i.playerCode == _playableType.Value)
+                if (i.index == _playableType.Value)
                 {
                     SwitchToSpecialIdle(i.moveSets[0]);
                 }

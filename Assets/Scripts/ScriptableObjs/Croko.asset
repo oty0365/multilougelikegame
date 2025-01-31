@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4610ced5a30d8a8488349dba1fa07796, type: 3}
   m_Name: Croko
   m_EditorClassIdentifier: 
+  index: 3
   playerCode: Croko
   playerName: "\uD06C\uB85C\uCF54"
   icon: {fileID: 3418299260781852295, guid: f2aaef74cd359dd42aa0491ce41f2aca, type: 3}

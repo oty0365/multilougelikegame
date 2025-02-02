@@ -8,7 +8,9 @@ public class WeaponPibot : NetworkBehaviour
         if (IsOwner)
         {
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var dir = Mathf.Atan2(gameObject.transform.position.y-mousePos.y, gameObject.transform.position.x - mousePos.x) * Mathf.Rad2Deg;
+            Debug.Log(mousePos);
+            var dir = Mathf.Atan2(mousePos.y- gameObject.transform.position.y,mousePos.x- gameObject.transform.position.x) * Mathf.Rad2Deg;
+            Debug.Log(dir);
             gameObject.transform.rotation = Quaternion.AngleAxis(dir, Vector3.forward);
         }
 

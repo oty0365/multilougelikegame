@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1033608852378862034}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.628, y: -0.091, z: -0.029328983}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -234,7 +234,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -2078653978
+    DestinationState: 1231151994
+    TransitionDuration: 0.25
+    TriggerNameHash: 848348862
+    TransitionIndex: 0
   m_Animator: {fileID: 7036078574292147032}
 --- !u!114 &1526468209843650651
 MonoBehaviour:
@@ -249,7 +256,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -2078653978
+    DestinationState: 1231151994
+    TransitionDuration: 0.25
+    TriggerNameHash: 848348862
+    TransitionIndex: 0
   m_Animator: {fileID: 7036078574292147032}
 --- !u!1 &2083869507754186786
 GameObject:
@@ -288,7 +302,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.45, y: 0.45, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7371256676395248411}
@@ -415,6 +429,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 019aac26-87b0-4963-8db0-aed818bdfb6c
     m_ActionName: 'PlayerMove/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8c13448b-0a7b-4b78-ae76-c4262211f25f
+    m_ActionName: 'PlayerAttack/WeaponAttack[/Mouse/leftButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerMove
@@ -607,7 +625,7 @@ Transform:
   m_GameObject: {fileID: 4491092337418593956}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.28, y: 0.17, z: 0}
+  m_LocalPosition: {x: 2.64, y: 0.17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

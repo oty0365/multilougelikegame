@@ -83,6 +83,34 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "PlayerAttack",
+            "id": "0f1a7ed8-9a77-4dac-a1c1-aef191236009",
+            "actions": [
+                {
+                    "name": "WeaponAttack",
+                    "type": "Button",
+                    "id": "8c13448b-0a7b-4b78-ae76-c4262211f25f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=2),Tap",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "03180463-9984-425d-9f6a-f87086c6c044",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WeaponAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

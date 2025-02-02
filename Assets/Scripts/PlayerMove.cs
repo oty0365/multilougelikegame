@@ -7,14 +7,6 @@ public class PlayerMove : NetworkBehaviour
     [SerializeField] private Rigidbody2D rb2D;
     public float moveSpeed;
     Vector3 dir = Vector2.zero;
-    void Start()
-    {
-        
-    }
-    void Update()
-    {
-        
-    }
     public void OnMove(InputAction.CallbackContext context)
     {
         if (context.performed&&IsOwner)

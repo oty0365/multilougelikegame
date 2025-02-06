@@ -1,8 +1,9 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class WeaponSlot : MonoBehaviour
+public class WeaponSlot : NetworkBehaviour
 {
-    public GameObject 
+    public GameObject weaponSlot;
     private void Start()
     {
         

@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 7036078574292147032}
   - component: {fileID: 617700056508490725}
   - component: {fileID: 8906790944654581782}
-  - component: {fileID: 1526468209843650651}
+  - component: {fileID: 6395341366380134017}
   m_Layer: 0
   m_Name: LongSword
   m_TagString: Untagged
@@ -243,7 +243,7 @@ MonoBehaviour:
     TriggerNameHash: 848348862
     TransitionIndex: 0
   m_Animator: {fileID: 7036078574292147032}
---- !u!114 &1526468209843650651
+--- !u!114 &6395341366380134017
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
